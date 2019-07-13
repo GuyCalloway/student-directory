@@ -1,17 +1,21 @@
-puts "The student of the Vilains Academy"
+
+students = [
+ "Dr. Hannibal Lecter",
+ "Darth Vader",
+ "Nurse Rathed",
+ "Michael Corleone",
+ "Alex Delarge",
+ "The WicKed Witch of the the West",
+ "Terminator",
+ "Freddy Krueger",
+ "The Joker",
+ "Joffrey Baratheon",
+ "Norman Bates"
+]
+puts "The students of Villains Academy"
 puts "-------------"
-puts "Dr. Hannibal Lecter"
-puts "Darth Vader"
-puts "Nurse Rathed"
-puts "Michael Corleone"
-puts "Alex Delarge"
-puts "The WicKed Witch of the the West"
-puts "Terminator"
-puts "Freddy Krueger"
-puts "The Joker"
-puts "Joffrey Baratheon"
-puts "Norman Bates"
+students.each do |student|
+  puts student
+end
 
-puts "Overall, we have #{student_count} great students"
-
-student_count = 11
+puts "Overall, we have #{students.count} great students"
