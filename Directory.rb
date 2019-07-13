@@ -15,13 +15,21 @@ def input_students
 students
 end
 
+def letter
+  puts "Names beginning with not?"
+  ans = gets.chomp
+  return ans
+end
+
 def print_header
   puts "The students of the Villains Academy"
   puts "--------------"
 end
-def print(students)
+def print(students, x)
   students.each_with_index do |student, i|
-    puts "#{i + 1}. #{student[:name]} (#{student[:cohort]} cohort)"
+    if student[:name][0] == x
+      puts "#{i + 1}. #{student[:name]} (#{student[:cohort]} cohort)"
+    end
   end
 end
 def print_footer(names)
@@ -29,6 +37,7 @@ def print_footer(names)
 end
 
 students = input_students
+x = letter
 print_header
-print(students)
+print(students, x)
 print_footer(students)
