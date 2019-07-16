@@ -47,20 +47,20 @@ def add_details(students)
 end
 
 def print_header
-  puts "The students of the Villains Academy"
-  puts "--------------"
+  puts "\nThe students of the Villains Academy"
+  puts "--------------".center(36)
 end
 
 def print(students)
   i = 0
   while i < students.count
-      puts "#{students[i][:name]} (#{students[i][:cohort]} cohort)"
+      puts "#{students[i][:name]} (#{students[i][:cohort]} cohort)".center(36)
       i += 1
   end
 end
 
 def print_footer(names)
-  puts "Overall, we have #{names.count} great students"
+  puts "Overall, we have #{names.count} great students\n".center(36)
 end
 
 students = input_students
