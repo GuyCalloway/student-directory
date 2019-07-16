@@ -13,31 +13,37 @@ def input_students
     puts "Now we have #{students.count} students"
     name = gets.chomp
   end
-
-  i = 0
-  while i < students.count
-    x = "c"
-    while !x.empty? do
-      puts "To Enter Student details, Enter name, press enter to move to next student"
-      x = gets.chomp
-
-
-    end
-end
+students
 end
 
 def add_details(students)
   i = 0
-  while i < students.count
-    puts "Enter category for #{students[i][:name]}'s additional info"
+  x = ""
+  while x != "stop"
+    puts "Press Enter to continue adding information, or stop to complete directory"
     x = gets.chomp
-    puts "Enter information"
-    y = gets.chomp
-    students[i][x.to_sym] = y
-    i += 1
+    if x == ""
+      students.each_with_index { |x, i| puts "#{x.fetch(:name)}'s xtra info key"
+        k = gets.chomp
+        puts "value, press L to add list"
+        v = gets.chomp
+        if v != "L"
+          students[i][k] = v
+        elsif v == "L"
+          puts "enter #{k}'s' one by one, then \'complete\' "
+          t = ""
+          j = []
+          until t == "complete"
+            t = gets.chomp
+            j << t
+          end
+          students[i][k] = j
+        end
+}
+    else
+    end
   end
-
-  students
+  return students
 end
 
 def print_header
@@ -47,7 +53,6 @@ end
 
 def print(students)
   i = 0
-  p students
   while i < students.count
       puts "#{students[i][:name]} (#{students[i][:cohort]} cohort)"
       i += 1
@@ -59,6 +64,7 @@ def print_footer(names)
 end
 
 students = input_students
+add_details(students)
 print_header
 print(students)
 print_footer(students)
