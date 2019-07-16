@@ -1,19 +1,24 @@
 
 def input_students
-  puts "Please enter the names of the students"
-  puts "press return twice to stop"
+  puts "Please enter the names of the students, enter to move on"
 
-# Add more information: hobbies, country of birth, height, etc.
   students = []
-
   name = gets.chomp
 
   while !name.empty? do
-    students << {name: name, cohort: :november}
+    students << {name: name}
     puts "Now we have #{students.count} students"
     name = gets.chomp
   end
-students
+
+   students.each_with_index { |x, i| puts "please enter cohort of student #{x.fetch(:name)}"
+     n = gets.chomp.to_sym
+     k = :cohort
+     students[i][k] = n
+   }
+
+  students
+
 end
 
 def add_details(students)
