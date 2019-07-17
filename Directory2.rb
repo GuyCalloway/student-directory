@@ -100,17 +100,35 @@ def print_header
 end
 
 def print(students)
-  i = 0
-  while i < students.count
-      puts "#{students[i][:name]} (#{students[i][:cohort]} cohort)".center(36)
-      i += 1
-  end
+  monthsindex = [:January,
+  :February,
+  :March,
+  :April,
+  :May,
+  :June,
+  :July,
+  :August,
+  :September,
+  :October,
+  :November,
+  :December
+  ]
+
+    studentsordered = students.group_by { |d| d[:cohort] }
+
+    studentsordered.sort_by { |x, v| monthsindex.index x }.each { |x, v| puts "Cohort: #{x}".center(36)
+      v.each { |x| puts x[:name].center(36)
+              }
+            }
 end
 
 def print_footer(names)
-  str = "Overall, we have #{names.count} great students\n"
-  puts studentcounter(str, names.count).center(36)
-
+  if names.count == 0
+      puts "There are no students in the Academy\n"
+  else
+      str = "Overall, we have #{names.count} great students\n"
+      puts studentcounter(str, names.count).center(36)
+  end
 end
 
 students = input_students
