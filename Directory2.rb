@@ -1,24 +1,67 @@
+def studentcounter(x, count)
+  if count == 1
+    x.sub! 'students', 'student'
+  else
+    x
+  end
+end
 
 def input_students
-  puts "Please enter the names of the students, enter to move on"
+  puts "Please enter the names of the students, press enter to add cohorts"
 
   students = []
   name = gets.chomp
 
   while !name.empty? do
     students << {name: name}
-    puts "Now we have #{students.count} students"
+    str = "Now we have #{students.count} students"
+    puts studentcounter(str, students.count)
     name = gets.chomp
   end
 
    students.each_with_index { |x, i| puts "please enter cohort of student #{x.fetch(:name)}"
-     n = gets.chomp.to_sym
+     n = gets.chomp
+     n = month_checker(n, x.fetch(:name))
      k = :cohort
-     students[i][k] = n
+     students[i][k] = n.to_sym
    }
 
   students
 
+end
+
+def month_checker(n, name)
+    months = [
+'January',
+'February',
+'March',
+'April',
+'May',
+'June',
+'July',
+'August',
+'September',
+'October',
+'November',
+'December'
+]
+
+  months_lowercase = []
+  months.each { |x| months_lowercase << x.downcase }
+  until months.include? n or months_lowercase.include? n
+    if !n.empty?
+      puts "unrecognised, please enter the month student #{name} started"
+      n = gets.chomp
+    elsif n.empty?
+      puts "Empty string detected, press enter again for default value or enter month cohort student joined"
+      n = gets.chomp
+      if n == ""
+        puts "default value assigned"
+        n = "January"
+      end
+    end
+  end
+  return n.capitalize
 end
 
 def add_details(students)
@@ -65,7 +108,9 @@ def print(students)
 end
 
 def print_footer(names)
-  puts "Overall, we have #{names.count} great students\n".center(36)
+  str = "Overall, we have #{names.count} great students\n"
+  puts studentcounter(str, names.count).center(36)
+
 end
 
 students = input_students
