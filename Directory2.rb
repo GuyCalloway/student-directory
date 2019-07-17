@@ -26,8 +26,7 @@ def input_students
      @students[i][k] = n.to_sym
    }
 
-  students
-  add_details(@students)
+  add_details
 end
 
 def month_checker(n, name)
@@ -64,7 +63,7 @@ def month_checker(n, name)
   return n.capitalize
 end
 
-def add_details(@students)
+def add_details
   i = 0
   x = ""
   while x != "stop"
