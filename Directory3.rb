@@ -15,8 +15,21 @@
 'December'
 ]
 
-@monthsindex = @months.each {|x| x.to_sym}
-@months_lowercase = @months.each { |x| x.downcase }
+@monthsindex = [:January,
+:February,
+:March,
+:April,
+:May,
+:June,
+:July,
+:August,
+:September,
+:October,
+:November,
+:December
+]
+
+
 
 def studentcounter(x, count)
   if count == 1
@@ -40,7 +53,8 @@ def input_students
   end
 
    @students.each_with_index { |x, i| puts "Please enter cohort of student #{x.fetch(:name)}"
-     n = month_checker(gets.chomp, x.fetch(:name))
+     n = gets.chomp
+     n = month_checker(n, x.fetch(:name))
      k = :cohort
      @students[i][k] = n.to_sym
    }
@@ -52,20 +66,22 @@ end
 
 
 def month_checker(n, name)
-  until @months.include? n or @months_lowercase.include? n
-    if !n.empty?
-      puts "Unrecognised, please enter the month student #{name} started"
-      n = gets.chomp
-    elsif n.empty?
-      puts "Empty string detected, press enter again for default value or enter month cohort student joined"
-      n = gets.chomp
-      if n == ""
-        puts "Default value assigned"
-        n = "January"
+  monthsdowncase = []
+  @months.each { |x| monthsdowncase << x.downcase }
+  until @months.include? n or monthsdowncase.include? n
+      if !n.empty?
+        puts "unrecognised, please enter the month student #{name} started"
+        n = gets.chomp
+      elsif n.empty?
+        puts "Empty string detected, press enter again for default value or enter month cohort student joined"
+        n = gets.chomp
+        if n == ""
+          puts "default value assigned"
+          n = "January"
+        end
       end
     end
   return n.capitalize
-end
 end
 
 def print_details_option(i)
@@ -92,7 +108,7 @@ def add_details
         if v != "L"
           @students[i][k] = v
         elsif v == "L"
-          puts "enter #{k}'s' one by one, then \'complete\' "
+          puts "enter #{k}'s' one by one, then type \'complete\'"
           t = ""
           j = []
           until t == "complete"
@@ -113,19 +129,7 @@ def print_header
   puts "--------------".center(36)
 end
 
-@monthsindex = [:January,
-:February,
-:March,
-:April,
-:May,
-:June,
-:July,
-:August,
-:September,
-:October,
-:November,
-:December
-]
+
 
 def print_students_list
     studentsordered = @students.group_by { |d| d[:cohort] }
@@ -145,7 +149,7 @@ def print_footer
 end
 
 def print_menu
-  puts "\n1. Input the students\n2. Show the students\n9. Exit"
+  puts "\n1. Input the students\n2. Show the students\n3. Save the list to students.csv\n9. Exit"
 end
 
 def show_students
@@ -161,7 +165,7 @@ def process(selection)
   when "2"
     show_students
   when "3"
-    show_extras
+    saving_file
   when "9"
     exit
   else
@@ -175,6 +179,16 @@ def interactive_menu
     print_menu
     process(gets.chomp)
   end
+end
+
+def saving_file
+  file = File.open("students.csv", "w")
+  @students.each do |student|
+    student_data = [student[:name], student[:cohort]]
+    csv_line = student_data.join(",")
+    file.puts csv_line
+  end
+  file.close
 end
 
 interactive_menu
