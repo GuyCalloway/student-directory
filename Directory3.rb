@@ -29,7 +29,7 @@
 :December
 ]
 
-
+@students = []
 
 def studentcounter(x, count)
   if count == 1
@@ -42,21 +42,23 @@ end
 def input_students
   puts "Please enter the names of the students, press enter to add cohorts"
 
-  @students = []
-  name = gets.chomp
+
+  name = STDIN.gets.chomp
 
   while !name.empty? do
     @students << {name: name}
     str = "Now we have #{@students.count} students"
     puts studentcounter(str, @students.count)
-    name = gets.chomp
+    name = STDIN.gets.chomp
   end
 
-   @students.each_with_index { |x, i| puts "Please enter cohort of student #{x.fetch(:name)}"
-     n = gets.chomp
+   @students.each_with_index { |x, i| if x[:cohort] == nil
+     puts "Please enter cohort of student #{x.fetch(:name)}"
+     n = STDIN.gets.chomp
      n = month_checker(n, x.fetch(:name))
      k = :cohort
      @students[i][k] = n.to_sym
+   end
    }
 
   add_details
@@ -71,10 +73,10 @@ def month_checker(n, name)
   until @months.include? n or monthsdowncase.include? n
       if !n.empty?
         puts "unrecognised, please enter the month student #{name} started"
-        n = gets.chomp
+        n = STDIN.gets.chomp
       elsif n.empty?
         puts "Empty string detected, press enter again for default value or enter month cohort student joined"
-        n = gets.chomp
+        n = STDIN.gets.chomp
         if n == ""
           puts "default value assigned"
           n = "January"
@@ -93,27 +95,36 @@ def print_details_option(i)
 end
 
 def add_details
+  @extrainfo = []
   i = 0
   x = ""
   while x != "stop"
     print_details_option(i)
-    x = gets.chomp
+    x = STDIN.gets.chomp
     i+=1
 
     if x == ""
       @students.each_with_index { |x, i| puts "#{x.fetch(:name)}'s xtra info key"
-        k = gets.chomp
+        k = STDIN.gets.chomp
+        @extrainfo << k
+
         puts "value, press L to add list"
-        v = gets.chomp
+
+        v = STDIN.gets.chomp
+
         if v != "L"
           @students[i][k] = v
         elsif v == "L"
-          puts "enter #{k}'s' one by one, then type \'complete\'"
+          puts "enter #{k}'s one by one, then type \'complete\'"
           t = ""
           j = []
           until t == "complete"
-            t = gets.chomp
-            j << t
+            t = STDIN.gets.chomp
+            if t == "complete"
+              break
+            else
+              j << t
+            end
           end
           @students[i][k] = j
         end
@@ -121,7 +132,6 @@ def add_details
     else
     end
   end
-  @students
 end
 
 def print_header
@@ -132,12 +142,17 @@ end
 
 
 def print_students_list
+    @students
     studentsordered = @students.group_by { |d| d[:cohort] }
     studentsordered.sort_by { |x, v| @monthsindex.index x }.each { |x, v| puts "Cohort: #{x}".center(36)
       v.each { |x| puts x[:name].center(36)
               }
             }
+
 end
+
+
+
 
 def print_footer
   if @students.count == 0
@@ -176,10 +191,9 @@ def process(selection)
 end
 
 def interactive_menu
-  @students = []
   loop do
     print_menu
-    process(gets.chomp)
+    process(STDIN.gets.chomp)
   end
 end
 
@@ -193,8 +207,10 @@ def save_students
   file.close
 end
 
-def load_students
-  file = File.open("students.csv", "r")
+def load_students(filename = "students.csv")
+  @students = []
+  puts "load_students running"
+  file = File.open(filename, "r")
   file.readlines.each do |line|
   name, cohort = line.chomp.split(',')
     @students << {name: name, cohort: cohort.to_sym}
@@ -202,6 +218,19 @@ def load_students
   file.close
 end
 
+def try_load_students
+  filename = ARGV.first
+  return if filename.nil?
+  if File.exists?(filename)
+    load_students(filename)
+    puts "Loaded #{@students.count} from #{filename}"
+  else
+    puts "Sorry, #{filename} doesn't exist."
+    exit
+  end
+end
+
+try_load_students
 interactive_menu
 
 # students = input_students
